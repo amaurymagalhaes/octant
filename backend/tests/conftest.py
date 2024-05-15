@@ -411,6 +411,14 @@ class Client:
         )
         assert rv.status_code == 201, rv.text
 
+    def get_antisybil_score(self, user_address: str) -> int:
+        rv = self._flask_client.get(f"/user/{user_address}/antisybil-status")
+        return rv.status_code, rv.text
+
+    def refresh_antisybil_score(self, user_address: str) -> int:
+        rv = self._flask_client.put(f"/user/{user_address}/antisybil-status")
+        return rv.status_code, rv.text
+
     @property
     def config(self):
         return self._flask_client.application.config

@@ -33,6 +33,22 @@ def move_to_next_epoch(target) -> bool:
 
 
 @pytest.mark.api
+def test_antisybil(
+    client: Client, deployer: UserAccount, ua_alice: UserAccount, ua_bob: UserAccount
+):
+    code, _ = client.get_antisybil_score(ua_alice.address)
+    assert code == 404  # score for this user is not cached
+
+    code, update_text = client.refresh_antisybil_score(ua_alice.address)
+    print(f"update endpoint returns: {update_text}")
+    assert code == 204
+
+    code, score = client.get_antisybil_score(ua_alice.address)
+    assert code == 200  # score available
+    print(f"retrieved score: {score}")
+
+
+@pytest.mark.api
 def test_pending_snapshot(
     client: Client, deployer: UserAccount, ua_alice: UserAccount, ua_bob: UserAccount
 ):
